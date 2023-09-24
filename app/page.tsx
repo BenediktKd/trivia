@@ -8,6 +8,15 @@ const HomePage: React.FC = () => {
   const [isQuestionReceived, setIsQuestionReceived] = useState(false);
   const [questionData, setQuestionData] = useState<any | null>(null);
 
+  const handleAnswer = (selectedOption: string) => {
+    if (ws) {
+      ws.send(JSON.stringify({
+        type: 'answer',
+        answer: selectedOption,
+      }));
+    }
+  };
+
   // Función para manejar el evento de unirse a la trivia
   const handleJoinTrivia = () => {
     const studentNumber = (document.getElementById('studentNumber') as HTMLInputElement).value;
@@ -53,7 +62,9 @@ const HomePage: React.FC = () => {
           {questionData.question_type === 'button' && (
             <div>
               {Object.entries(questionData.question_options).map(([key, value]) => (
-                <button key={key}>{String(value)}</button>
+                <button key={key} onClick={() => handleAnswer(key)}>
+                  {String(value)}
+                </button>
               ))}
             </div>
           )}

@@ -8,14 +8,18 @@ const HomePage: React.FC = () => {
   const [isQuestionReceived, setIsQuestionReceived] = useState(false);
   const [questionData, setQuestionData] = useState<any | null>(null);
 
+  // Función para manejar el evento de unirse a la trivia
   const handleJoinTrivia = () => {
     const studentNumber = (document.getElementById('studentNumber') as HTMLInputElement).value;
     const username = (document.getElementById('username') as HTMLInputElement).value || 'DefaultUsername';
 
+    // Establecer la conexión WebSocket
     const websocket = new WebSocket('wss://trivia.tallerdeintegracion.cl/connect');
 
     websocket.onopen = () => {
       console.log("WebSocket connection opened");
+
+      // Enviar el evento JOIN una vez que se establezca la conexión
       websocket.send(JSON.stringify({
         type: 'join',
         id: studentNumber,
@@ -24,35 +28,39 @@ const HomePage: React.FC = () => {
     };
 
     websocket.onmessage = (event) => {
-      console.log("WebSocket message received:", event.data); // Log adicional
       const data = JSON.parse(event.data);
       console.log(data);
-    
-      if (data.type === 'question') {
+
+      if (data.type === 'accepted') {
+        // No es necesario hacer nada específico aquí por ahora
+      } else if (data.type === 'question') {
         setIsQuestionReceived(true);
-        setQuestionData(data.question);
+        setQuestionData(data); // Actualiza con todo el objeto data
       }
     };
 
     setWs(websocket);
   };
 
-  console.log("isQuestionReceived:", isQuestionReceived); // Verificar el estado
-  console.log("questionData:", questionData); // Verificar el estado
-
   return (
-    <div key={isQuestionReceived ? "question" : "home"} className="flex flex-col items-center justify-center min-h-screen">
+    <div className="flex flex-col items-center justify-center min-h-screen">
+      <h2 className="text-3xl font-bold mb-4">¡Bienvenido a Mystical Trivia Quest!</h2>
+      <p className="text-lg mb-8">Únete a la aventura y demuestra tus conocimientos.</p>
+
       {isQuestionReceived && questionData ? (
         <div>
-          <h2>{questionData.title}</h2>
-          <p>Puntos: {questionData.points}</p>
-          {/* Aquí puedes renderizar el resto de la información de la pregunta */}
+          <h3>{questionData.question_title}</h3>
+          {questionData.question_type === 'button' && (
+            <div>
+              {Object.entries(questionData.question_options).map(([key, value]) => (
+                <button key={key}>{String(value)}</button>
+              ))}
+            </div>
+          )}
+          {/* Puedes agregar más lógica para otros tipos de preguntas aquí */}
         </div>
       ) : (
         <>
-          <h2 className="text-3xl font-bold mb-4">¡Bienvenido a Mystical Trivia Quest!</h2>
-          <p className="text-lg mb-8">Únete a la aventura y demuestra tus conocimientos.</p>
-
           <div className="mb-4">
             <label htmlFor="studentNumber" className="block text-sm font-medium text-gray-700">Número de alumno</label>
             <input 
@@ -81,4 +89,5 @@ const HomePage: React.FC = () => {
 }
 
 export default HomePage;
+
 

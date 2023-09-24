@@ -30,13 +30,11 @@ const HomePage: React.FC = () => {
       console.log(data);
 
       if (data.type === 'accepted') {
-        // Si se acepta la conexión, simplemente se muestra un mensaje en la consola
-        console.log("Conexión aceptada. Esperando eventos...");
+        localStorage.setItem('shouldContinueListening', 'true');
       } else if (data.type === 'question') {
-        // Si recibes una pregunta, redirige a la página de pregunta
+        alert("Te has unido a una partida en curso. Comenzarás con 0 puntos.");
         window.location.href = '/question';
       }
-      // Puedes agregar más lógica para manejar otros eventos aquí
     };
 
     setWs(websocket);

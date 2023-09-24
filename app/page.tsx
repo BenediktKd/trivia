@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import './globals.css';
 
@@ -10,39 +10,38 @@ const HomePage: React.FC = () => {
   // Función para manejar el evento de unirse a la trivia
   const handleJoinTrivia = () => {
     const studentNumber = (document.getElementById('studentNumber') as HTMLInputElement).value;
-    const username = (document.getElementById('username') as HTMLInputElement).value || 'DefaultUsername'; // Puedes cambiar 'DefaultUsername' según lo que desees
+    const username = (document.getElementById('username') as HTMLInputElement).value || 'DefaultUsername';
 
-    if (ws) {
-      ws.send(JSON.stringify({
-        type: 'join',
-        id: studentNumber,
-        username: username
-      }));
-    }
-  };
-
-  useEffect(() => {
+    // Establecer la conexión WebSocket
     const websocket = new WebSocket('wss://trivia.tallerdeintegracion.cl/connect');
 
     websocket.onopen = () => {
       console.log("WebSocket connection opened");
+
+      // Enviar el evento JOIN una vez que se establezca la conexión
+      websocket.send(JSON.stringify({
+        type: 'join',
+        id: studentNumber,
+        username: username
+      }));
     };
 
     websocket.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      // Aquí manejas los eventos entrantes, como ACCEPTED, DENIED, etc.
       console.log(data);
+
+      if (data.type === 'accepted') {
+        // Redirigir al lobby si se acepta la conexión
+        window.location.href = '/lobby';
+      } else if (data.type === 'question') {
+        // Si recibes una pregunta inmediatamente después de unirte, significa que te has unido a una partida en curso
+        alert("Te has unido a una partida en curso. Comenzarás con 0 puntos.");
+      }
+      // Puedes agregar más lógica para manejar otros eventos aquí
     };
 
     setWs(websocket);
-
-    // Asegúrate de cerrar la conexión cuando el componente se desmonte
-    return () => {
-      if (websocket) {
-        websocket.close();
-      }
-    };
-  }, []);
+  };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
@@ -67,18 +66,13 @@ const HomePage: React.FC = () => {
         />
       </div>
 
-      <button onClick={handleJoinTrivia} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4">
+      <button onClick={handleJoinTrivia} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
         Unirse a la Trivia
       </button>
-
-      <Link href="/lobby">
-        <a className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-          Ir al Lobby
-        </a>
-      </Link>
     </div>
   );
 }
 
 export default HomePage;
+
 

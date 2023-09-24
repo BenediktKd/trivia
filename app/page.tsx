@@ -1,10 +1,13 @@
 'use client'
 
-import React from 'react';
+import React, { useState } from 'react';
 import './globals.css';
 
 const HomePage: React.FC = () => {
 
+  const [ws, setWs] = useState<WebSocket | null>(null);
+
+  // Función para manejar el evento de unirse a la trivia
   const handleJoinTrivia = () => {
     const studentNumber = (document.getElementById('studentNumber') as HTMLInputElement).value;
     const username = (document.getElementById('username') as HTMLInputElement).value || 'DefaultUsername';
@@ -12,11 +15,13 @@ const HomePage: React.FC = () => {
     // Establecer la conexión WebSocket
     const websocket = new WebSocket('wss://trivia.tallerdeintegracion.cl/connect');
 
-    // Almacenar el objeto WebSocket en el objeto window
-    (window as any).websocket = websocket;
-
     websocket.onopen = () => {
       console.log("WebSocket connection opened");
+
+      // Adjuntar el objeto websocket al objeto window
+      (window as any).websocket = websocket;
+
+      // Enviar el evento JOIN una vez que se establezca la conexión
       websocket.send(JSON.stringify({
         type: 'join',
         id: studentNumber,
@@ -29,12 +34,14 @@ const HomePage: React.FC = () => {
       console.log(data);
 
       if (data.type === 'accepted') {
-        console.log("Accepted event received.");
+        localStorage.setItem('shouldContinueListening', 'true');
       } else if (data.type === 'question') {
         alert("Te has unido a una partida en curso. Comenzarás con 0 puntos.");
         window.location.href = '/question';
       }
     };
+
+    setWs(websocket);
   };
 
   return (

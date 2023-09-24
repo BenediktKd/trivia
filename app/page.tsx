@@ -11,6 +11,7 @@ const HomePage: React.FC = () => {
   const [chatMessages, setChatMessages] = useState<Array<{ message: string, username: string, timestamp: string }>>([]);
   const [secondsRemaining, setSecondsRemaining] = useState<number | null>(null);
   const [scores, setScores] = useState<{ [username: string]: number }>({});
+  const [lobbyData, setLobbyData] = useState<any | null>(null);
 
   const buttonColors = ['bg-red-600', 'bg-green-600', 'bg-blue-600', 'bg-yellow-600'];
 
@@ -74,6 +75,8 @@ const HomePage: React.FC = () => {
         setSecondsRemaining(data.seconds_remaining);
       } else if (data.type === 'score') {
         setScores(data.scores);
+      } else if (data.type === 'lobby') {
+        setLobbyData(data);
       }
     };
 
@@ -85,14 +88,19 @@ const HomePage: React.FC = () => {
   return (
     <div className="flex flex-row justify-between min-h-screen p-4">
       <div className="flex flex-col items-start w-2/3">
-        <h2 className="text-3xl font-bold mb-4">¡Bienvenido a Mystical Trivia Quest!</h2>
-        <p className="text-lg mb-8">Únete a la aventura y demuestra tus conocimientos.</p>
-
-        {secondsRemaining !== null && (
-          <p className="text-lg mb-8">Tiempo restante: {secondsRemaining} segundos</p>
-        )}
-
-        {isQuestionReceived && questionData ? (
+        {lobbyData ? (
+          <div className="lobby-info border p-4 rounded-md">
+            <h3>ID de Trivia: {lobbyData.trivia_id}</h3>
+            <p>{lobbyData.message}</p>
+            <p>Tiempo restante: {lobbyData.seconds_remaining} segundos</p>
+            <p>Jugadores:</p>
+            <ul>
+              {lobbyData.players.map((player: string, index: number) => (
+                <li key={index}>{player}</li>
+              ))}
+            </ul>
+          </div>
+        ) : isQuestionReceived && questionData ? (
           <div>
             <h3>{questionData.question_title}</h3>
             {questionData.question_type === 'button' && (
@@ -158,7 +166,7 @@ const HomePage: React.FC = () => {
                 className="mt-1 p-2 w-64 border rounded-md text-black"
               />
             </div>
-
+  
             <div className="mb-4">
               <label htmlFor="username" className="block text-sm font-medium text-gray-700">Usuario (opcional)</label>
               <input 
@@ -167,14 +175,14 @@ const HomePage: React.FC = () => {
                 className="mt-1 p-2 w-64 border rounded-md text-black"
               />
             </div>
-
+  
             <button onClick={handleJoinTrivia} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
               Unirse a la Trivia
             </button>
           </>
         )}
       </div>
-
+  
       {/* Tabla de clasificación */}
       <div className="ranking-table mt-4 w-1/3">
         <h3 className="text-lg font-bold">Ranking</h3>

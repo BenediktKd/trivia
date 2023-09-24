@@ -7,6 +7,7 @@ const HomePage: React.FC = () => {
   const [ws, setWs] = useState<WebSocket | null>(null);
   const [isQuestionReceived, setIsQuestionReceived] = useState(false);
   const [questionData, setQuestionData] = useState<any | null>(null);
+  const [textAnswer, setTextAnswer] = useState('');
 
   const buttonColors = ['bg-red-600', 'bg-green-600', 'bg-blue-600', 'bg-yellow-600'];
 
@@ -19,6 +20,10 @@ const HomePage: React.FC = () => {
         trivia_id: questionData.trivia_id
       }));
     }
+  };
+
+  const handleTextAnswer = () => {
+    handleAnswer(textAnswer);
   };
 
   // Función para manejar el evento de unirse a la trivia
@@ -77,7 +82,22 @@ const HomePage: React.FC = () => {
               ))}
             </div>
           )}
-          {/* Puedes agregar más lógica para otros tipos de preguntas aquí */}
+          {questionData.question_type === 'text' && (
+            <div>
+              <input 
+                type="text" 
+                value={textAnswer} 
+                onChange={(e) => setTextAnswer(e.target.value)} 
+                className="border p-2 rounded-md"
+              />
+              <button 
+                onClick={handleTextAnswer} 
+                className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-2"
+              >
+                Enviar Respuesta
+              </button>
+            </div>
+          )}
         </div>
       ) : (
         <>

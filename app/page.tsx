@@ -6,6 +6,8 @@ import './globals.css';
 const HomePage: React.FC = () => {
 
   const [ws, setWs] = useState<WebSocket | null>(null);
+  const [isQuestionReceived, setIsQuestionReceived] = useState(false); // Nuevo estado
+  const [questionData, setQuestionData] = useState<any>(null); // Datos de la pregunta
 
   // Función para manejar el evento de unirse a la trivia
   const handleJoinTrivia = () => {
@@ -36,14 +38,25 @@ const HomePage: React.FC = () => {
       if (data.type === 'accepted') {
         localStorage.setItem('shouldContinueListening', 'true');
       } else if (data.type === 'question') {
-        alert("Te has unido a una partida en curso. Comenzarás con 0 puntos.");
-        window.location.href = '/question';
+        setIsQuestionReceived(true); // Cambiar el estado para mostrar el contenido de la pregunta
+        setQuestionData(data.question); // Guardar los datos de la pregunta
       }
     };
 
     setWs(websocket);
   };
 
+  // Si se ha recibido una pregunta, mostrar el contenido relacionado con la pregunta
+  if (isQuestionReceived && questionData) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen">
+        <h2 className="text-3xl font-bold mb-4">{questionData.title}</h2>
+        {/* Aquí puedes agregar más contenido relacionado con la pregunta */}
+      </div>
+    );
+  }
+
+  // Contenido inicial
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
       <h2 className="text-3xl font-bold mb-4">¡Bienvenido a Mystical Trivia Quest!</h2>
@@ -75,6 +88,4 @@ const HomePage: React.FC = () => {
 }
 
 export default HomePage;
-
-
 

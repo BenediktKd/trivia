@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './globals.css';
 
 const HomePage: React.FC = () => {
@@ -9,8 +9,19 @@ const HomePage: React.FC = () => {
   const [questionData, setQuestionData] = useState<any | null>(null);
   const [textAnswer, setTextAnswer] = useState('');
   const [chatMessages, setChatMessages] = useState<Array<{ message: string, username: string, timestamp: string }>>([]);
+  const [secondsRemaining, setSecondsRemaining] = useState<number | null>(null);
 
   const buttonColors = ['bg-red-600', 'bg-green-600', 'bg-blue-600', 'bg-yellow-600'];
+
+  useEffect(() => {
+    let timerId: NodeJS.Timeout;
+    if (secondsRemaining !== null && secondsRemaining > 0) {
+      timerId = setInterval(() => {
+        setSecondsRemaining(prev => (prev !== null ? prev - 1 : null));
+      }, 1000);
+    }
+    return () => clearInterval(timerId);
+  }, [secondsRemaining]);
 
   const handleAnswer = (selectedOption: string) => {
     if (ws) {
@@ -55,8 +66,11 @@ const HomePage: React.FC = () => {
       } else if (data.type === 'question') {
         setIsQuestionReceived(true);
         setQuestionData(data);
+        setChatMessages([]); // Limpiar mensajes de chat al recibir una nueva pregunta
       } else if (data.type === 'chat') {
         handleChatMessage(data.message, data.username);
+      } else if (data.type === 'timer') {
+        setSecondsRemaining(data.seconds_remaining);
       }
     };
 
@@ -67,6 +81,10 @@ const HomePage: React.FC = () => {
     <div className="flex flex-col items-center justify-center min-h-screen">
       <h2 className="text-3xl font-bold mb-4">¡Bienvenido a Mystical Trivia Quest!</h2>
       <p className="text-lg mb-8">Únete a la aventura y demuestra tus conocimientos.</p>
+
+      {secondsRemaining !== null && (
+        <p className="text-lg mb-8">Tiempo restante: {secondsRemaining} segundos</p>
+      )}
 
       {isQuestionReceived && questionData ? (
         <div>

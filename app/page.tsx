@@ -29,7 +29,7 @@ const HomePage: React.FC = () => {
 
   const handleChatMessage = (message: string, username: string) => {
     const timestamp = new Date().toLocaleTimeString();
-    setChatMessages([...chatMessages, { message, username, timestamp }]);
+    setChatMessages(prevMessages => [...prevMessages, { message, username, timestamp }]);
   };
 
   const handleJoinTrivia = () => {

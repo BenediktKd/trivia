@@ -13,6 +13,8 @@ const HomePage: React.FC = () => {
       ws.send(JSON.stringify({
         type: 'answer',
         answer: selectedOption,
+        question_id: questionData.question_id,
+        trivia_id: questionData.trivia_id
       }));
     }
   };
@@ -59,10 +61,15 @@ const HomePage: React.FC = () => {
       {isQuestionReceived && questionData ? (
         <div>
           <h3>{questionData.question_title}</h3>
+          <p>Puntos por esta pregunta: {questionData.question_points}</p>
           {questionData.question_type === 'button' && (
             <div>
               {Object.entries(questionData.question_options).map(([key, value]) => (
-                <button key={key} onClick={() => handleAnswer(key)}>
+                <button 
+                  key={key} 
+                  onClick={() => handleAnswer(key)}
+                  className="m-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                >
                   {String(value)}
                 </button>
               ))}

@@ -24,9 +24,10 @@ const HomePage: React.FC = () => {
     };
 
     websocket.onmessage = (event) => {
+      console.log("WebSocket message received:", event.data); // Log adicional
       const data = JSON.parse(event.data);
       console.log(data);
-
+    
       if (data.type === 'question') {
         setIsQuestionReceived(true);
         setQuestionData(data.question);

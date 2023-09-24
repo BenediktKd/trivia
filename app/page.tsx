@@ -83,98 +83,100 @@ const HomePage: React.FC = () => {
   const sortedScores = Object.entries(scores).sort(([, a], [, b]) => b - a);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
-      <h2 className="text-3xl font-bold mb-4">¡Bienvenido a Mystical Trivia Quest!</h2>
-      <p className="text-lg mb-8">Únete a la aventura y demuestra tus conocimientos.</p>
+    <div className="flex flex-row justify-between min-h-screen p-4">
+      <div className="flex flex-col items-start w-2/3">
+        <h2 className="text-3xl font-bold mb-4">¡Bienvenido a Mystical Trivia Quest!</h2>
+        <p className="text-lg mb-8">Únete a la aventura y demuestra tus conocimientos.</p>
 
-      {secondsRemaining !== null && (
-        <p className="text-lg mb-8">Tiempo restante: {secondsRemaining} segundos</p>
-      )}
+        {secondsRemaining !== null && (
+          <p className="text-lg mb-8">Tiempo restante: {secondsRemaining} segundos</p>
+        )}
 
-      {isQuestionReceived && questionData ? (
-        <div>
-          <h3>{questionData.question_title}</h3>
-          {questionData.question_type === 'button' && (
-            <div>
-              {Object.entries(questionData.question_options).map(([key, value], index) => (
-                <button 
-                  key={key} 
-                  onClick={() => handleAnswer(key)} 
-                  className={`${buttonColors[index % buttonColors.length]} text-white font-bold py-2 px-4 rounded m-2`}
-                >
-                  {String(value)}
-                </button>
-              ))}
-            </div>
-          )}
-          {questionData.question_type === 'text' && (
-            <div>
-              <input 
-                type="text" 
-                value={textAnswer} 
-                onChange={(e) => setTextAnswer(e.target.value)} 
-                className="border p-2 rounded-md text-black"
-              />
-              <button 
-                onClick={handleTextAnswer} 
-                className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-2"
-              >
-                Enviar Respuesta
-              </button>
-            </div>
-          )}
-          {questionData.question_type === 'chat' && (
-            <div>
-              <div className="chat-box border p-2 rounded-md mb-2" style={{ height: '200px', overflowY: 'scroll' }}>
-                {chatMessages.map((msg, index) => (
-                  <p key={index}>
-                    <strong>{msg.username} ({msg.timestamp}):</strong> {msg.message}
-                  </p>
+        {isQuestionReceived && questionData ? (
+          <div>
+            <h3>{questionData.question_title}</h3>
+            {questionData.question_type === 'button' && (
+              <div>
+                {Object.entries(questionData.question_options).map(([key, value], index) => (
+                  <button 
+                    key={key} 
+                    onClick={() => handleAnswer(key)} 
+                    className={`${buttonColors[index % buttonColors.length]} text-white font-bold py-2 px-4 rounded m-2`}
+                  >
+                    {String(value)}
+                  </button>
                 ))}
               </div>
+            )}
+            {questionData.question_type === 'text' && (
+              <div>
+                <input 
+                  type="text" 
+                  value={textAnswer} 
+                  onChange={(e) => setTextAnswer(e.target.value)} 
+                  className="border p-2 rounded-md text-black"
+                />
+                <button 
+                  onClick={handleTextAnswer} 
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-2"
+                >
+                  Enviar Respuesta
+                </button>
+              </div>
+            )}
+            {questionData.question_type === 'chat' && (
+              <div>
+                <div className="chat-box border p-2 rounded-md mb-2" style={{ height: '200px', overflowY: 'scroll' }}>
+                  {chatMessages.map((msg, index) => (
+                    <p key={index}>
+                      <strong>{msg.username} ({msg.timestamp}):</strong> {msg.message}
+                    </p>
+                  ))}
+                </div>
+                <input 
+                  type="text" 
+                  value={textAnswer} 
+                  onChange={(e) => setTextAnswer(e.target.value)} 
+                  className="border p-2 rounded-md text-black"
+                />
+                <button 
+                  onClick={handleTextAnswer} 
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-2"
+                >
+                  Enviar Mensaje
+                </button>
+              </div>
+            )}
+          </div>
+        ) : (
+          <>
+            <div className="mb-4">
+              <label htmlFor="studentNumber" className="block text-sm font-medium text-gray-700">Número de alumno</label>
               <input 
                 type="text" 
-                value={textAnswer} 
-                onChange={(e) => setTextAnswer(e.target.value)} 
-                className="border p-2 rounded-md text-black"
+                id="studentNumber" 
+                className="mt-1 p-2 w-64 border rounded-md text-black"
               />
-              <button 
-                onClick={handleTextAnswer} 
-                className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-2"
-              >
-                Enviar Mensaje
-              </button>
             </div>
-          )}
-        </div>
-      ) : (
-        <>
-          <div className="mb-4">
-            <label htmlFor="studentNumber" className="block text-sm font-medium text-gray-700">Número de alumno</label>
-            <input 
-              type="text" 
-              id="studentNumber" 
-              className="mt-1 p-2 w-64 border rounded-md text-black"
-            />
-          </div>
 
-          <div className="mb-4">
-            <label htmlFor="username" className="block text-sm font-medium text-gray-700">Usuario (opcional)</label>
-            <input 
-              type="text" 
-              id="username" 
-              className="mt-1 p-2 w-64 border rounded-md text-black"
-            />
-          </div>
+            <div className="mb-4">
+              <label htmlFor="username" className="block text-sm font-medium text-gray-700">Usuario (opcional)</label>
+              <input 
+                type="text" 
+                id="username" 
+                className="mt-1 p-2 w-64 border rounded-md text-black"
+              />
+            </div>
 
-          <button onClick={handleJoinTrivia} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            Unirse a la Trivia
-          </button>
-        </>
-      )}
+            <button onClick={handleJoinTrivia} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+              Unirse a la Trivia
+            </button>
+          </>
+        )}
+      </div>
 
       {/* Tabla de clasificación */}
-      <div className="ranking-table mt-4">
+      <div className="ranking-table mt-4 w-1/3">
         <h3 className="text-lg font-bold">Ranking</h3>
         <table className="border-collapse border border-gray-500 w-full">
           <thead>
@@ -198,6 +200,8 @@ const HomePage: React.FC = () => {
 }
 
 export default HomePage;
+
+
 
 
 

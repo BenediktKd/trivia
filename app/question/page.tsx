@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react';
-import './globals.css';
+import '../globals.css';
 
 const QuestionPage: React.FC = () => {
   const [ws, setWs] = useState<WebSocket | null>(null);

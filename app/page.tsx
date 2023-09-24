@@ -90,7 +90,7 @@ const HomePage: React.FC = () => {
                 type="text" 
                 value={textAnswer} 
                 onChange={(e) => setTextAnswer(e.target.value)} 
-                className="border p-2 rounded-md"
+                className="border p-2 rounded-md text-black"
               />
               <button 
                 onClick={handleTextAnswer} 
@@ -113,7 +113,7 @@ const HomePage: React.FC = () => {
                 type="text" 
                 value={textAnswer} 
                 onChange={(e) => setTextAnswer(e.target.value)} 
-                className="border p-2 rounded-md"
+                className="border p-2 rounded-md text-black"
               />
               <button 
                 onClick={handleTextAnswer} 

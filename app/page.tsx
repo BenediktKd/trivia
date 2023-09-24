@@ -8,6 +8,7 @@ const HomePage: React.FC = () => {
   const [isQuestionReceived, setIsQuestionReceived] = useState(false);
   const [questionData, setQuestionData] = useState<any | null>(null);
   const [textAnswer, setTextAnswer] = useState('');
+  const [chatMessages, setChatMessages] = useState<Array<{ message: string, username: string, timestamp: string }>>([]);
 
   const buttonColors = ['bg-red-600', 'bg-green-600', 'bg-blue-600', 'bg-yellow-600'];
 
@@ -26,18 +27,19 @@ const HomePage: React.FC = () => {
     handleAnswer(textAnswer);
   };
 
-  // Función para manejar el evento de unirse a la trivia
+  const handleChatMessage = (message: string, username: string) => {
+    const timestamp = new Date().toLocaleTimeString();
+    setChatMessages([...chatMessages, { message, username, timestamp }]);
+  };
+
   const handleJoinTrivia = () => {
     const studentNumber = (document.getElementById('studentNumber') as HTMLInputElement).value;
     const username = (document.getElementById('username') as HTMLInputElement).value || 'DefaultUsername';
 
-    // Establecer la conexión WebSocket
     const websocket = new WebSocket('wss://trivia.tallerdeintegracion.cl/connect');
 
     websocket.onopen = () => {
       console.log("WebSocket connection opened");
-
-      // Enviar el evento JOIN una vez que se establezca la conexión
       websocket.send(JSON.stringify({
         type: 'join',
         id: studentNumber,
@@ -50,10 +52,11 @@ const HomePage: React.FC = () => {
       console.log(data);
 
       if (data.type === 'accepted') {
-        // No es necesario hacer nada específico aquí por ahora
       } else if (data.type === 'question') {
         setIsQuestionReceived(true);
-        setQuestionData(data); // Actualiza con todo el objeto data
+        setQuestionData(data);
+      } else if (data.type === 'chat') {
+        handleChatMessage(data.message, data.username);
       }
     };
 
@@ -68,14 +71,13 @@ const HomePage: React.FC = () => {
       {isQuestionReceived && questionData ? (
         <div>
           <h3>{questionData.question_title}</h3>
-          <p>Puntos por esta pregunta: {questionData.question_points}</p>
           {questionData.question_type === 'button' && (
             <div>
               {Object.entries(questionData.question_options).map(([key, value], index) => (
                 <button 
                   key={key} 
-                  onClick={() => handleAnswer(key)}
-                  className={`${buttonColors[index]} hover:bg-opacity-80 text-white font-bold py-2 px-4 rounded m-2`}
+                  onClick={() => handleAnswer(key)} 
+                  className={`${buttonColors[index % buttonColors.length]} text-white font-bold py-2 px-4 rounded m-2`}
                 >
                   {String(value)}
                 </button>
@@ -95,6 +97,29 @@ const HomePage: React.FC = () => {
                 className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-2"
               >
                 Enviar Respuesta
+              </button>
+            </div>
+          )}
+          {questionData.question_type === 'chat' && (
+            <div>
+              <div className="chat-box border p-2 rounded-md mb-2" style={{ height: '200px', overflowY: 'scroll' }}>
+                {chatMessages.map((msg, index) => (
+                  <p key={index}>
+                    <strong>{msg.username} ({msg.timestamp}):</strong> {msg.message}
+                  </p>
+                ))}
+              </div>
+              <input 
+                type="text" 
+                value={textAnswer} 
+                onChange={(e) => setTextAnswer(e.target.value)} 
+                className="border p-2 rounded-md"
+              />
+              <button 
+                onClick={handleTextAnswer} 
+                className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-2"
+              >
+                Enviar Mensaje
               </button>
             </div>
           )}
@@ -129,5 +154,6 @@ const HomePage: React.FC = () => {
 }
 
 export default HomePage;
+
 
 

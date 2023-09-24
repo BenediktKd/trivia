@@ -10,6 +10,7 @@ const HomePage: React.FC = () => {
   const [textAnswer, setTextAnswer] = useState('');
   const [chatMessages, setChatMessages] = useState<Array<{ message: string, username: string, timestamp: string }>>([]);
   const [secondsRemaining, setSecondsRemaining] = useState<number | null>(null);
+  const [scores, setScores] = useState<{ [username: string]: number }>({});
 
   const buttonColors = ['bg-red-600', 'bg-green-600', 'bg-blue-600', 'bg-yellow-600'];
 
@@ -71,11 +72,15 @@ const HomePage: React.FC = () => {
         handleChatMessage(data.message, data.username);
       } else if (data.type === 'timer') {
         setSecondsRemaining(data.seconds_remaining);
+      } else if (data.type === 'score') {
+        setScores(data.scores);
       }
     };
 
     setWs(websocket);
   };
+
+  const sortedScores = Object.entries(scores).sort(([, a], [, b]) => b - a);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
@@ -167,11 +172,33 @@ const HomePage: React.FC = () => {
           </button>
         </>
       )}
+
+      {/* Tabla de clasificación */}
+      <div className="ranking-table mt-4">
+        <h3 className="text-lg font-bold">Ranking</h3>
+        <table className="border-collapse border border-gray-500 w-full">
+          <thead>
+            <tr>
+              <th className="border border-gray-400 px-4 py-2">Usuario</th>
+              <th className="border border-gray-400 px-4 py-2">Puntaje</th>
+            </tr>
+          </thead>
+          <tbody>
+            {sortedScores.map(([username, score], index) => (
+              <tr key={index}>
+                <td className="border border-gray-400 px-4 py-2">{username}</td>
+                <td className="border border-gray-400 px-4 py-2">{score}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
 
 export default HomePage;
+
 
 
 

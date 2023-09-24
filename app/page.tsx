@@ -8,6 +8,8 @@ const HomePage: React.FC = () => {
   const [isQuestionReceived, setIsQuestionReceived] = useState(false);
   const [questionData, setQuestionData] = useState<any | null>(null);
 
+  const buttonColors = ['bg-red-600', 'bg-green-600', 'bg-blue-600', 'bg-yellow-600'];
+
   const handleAnswer = (selectedOption: string) => {
     if (ws) {
       ws.send(JSON.stringify({
@@ -64,11 +66,11 @@ const HomePage: React.FC = () => {
           <p>Puntos por esta pregunta: {questionData.question_points}</p>
           {questionData.question_type === 'button' && (
             <div>
-              {Object.entries(questionData.question_options).map(([key, value]) => (
+              {Object.entries(questionData.question_options).map(([key, value], index) => (
                 <button 
                   key={key} 
                   onClick={() => handleAnswer(key)}
-                  className="m-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  className={`${buttonColors[index]} hover:bg-opacity-80 text-white font-bold py-2 px-4 rounded m-2`}
                 >
                   {String(value)}
                 </button>

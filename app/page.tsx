@@ -8,14 +8,16 @@ const HomePage: React.FC = () => {
   const [isQuestionReceived, setIsQuestionReceived] = useState(false);
   const [questionData, setQuestionData] = useState<any | null>(null);
   const [textAnswer, setTextAnswer] = useState('');
-  const [chatMessages, setChatMessages] = useState<Array<{ message: string, username: string, timestamp: string }>>([]);
+  const [chatMessages, setChatMessages] = useState<Array<{ message: string, username: string, timestamp: string, question_id: number }>>([]);
 
   const buttonColors = ['bg-red-600', 'bg-green-600', 'bg-blue-600', 'bg-yellow-600'];
 
   useEffect(() => {
-    // Cada vez que questionData cambie, limpiar chatMessages
-    setChatMessages([]);
-  }, [questionData]); // Dependencia en questionData
+    // Cada vez que questionData cambie, verificar si el question_id ha cambiado
+    if (questionData && questionData.question_id !== (chatMessages[0]?.question_id || -1)) {
+      setChatMessages([]);
+    }
+  }, [questionData, chatMessages]);
 
   const handleAnswer = (selectedOption: string) => {
     if (ws) {
@@ -34,7 +36,7 @@ const HomePage: React.FC = () => {
 
   const handleChatMessage = (message: string, username: string) => {
     const timestamp = new Date().toLocaleTimeString();
-    setChatMessages([...chatMessages, { message, username, timestamp }]);
+    setChatMessages(prevMessages => [...prevMessages, { message, username, timestamp, question_id: questionData.question_id }]);
   };
 
   const handleJoinTrivia = () => {

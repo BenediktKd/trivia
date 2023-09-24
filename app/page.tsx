@@ -1,7 +1,6 @@
-"use client"
+'use client'
 
 import React, { useState } from 'react';
-import Link from 'next/link';
 import './globals.css';
 
 const HomePage: React.FC = () => {
@@ -36,6 +35,7 @@ const HomePage: React.FC = () => {
       } else if (data.type === 'question') {
         // Si recibes una pregunta inmediatamente después de unirte, significa que te has unido a una partida en curso
         alert("Te has unido a una partida en curso. Comenzarás con 0 puntos.");
+        window.location.href = '/question';
       }
       // Puedes agregar más lógica para manejar otros eventos aquí
     };
@@ -74,5 +74,3 @@ const HomePage: React.FC = () => {
 }
 
 export default HomePage;
-
-

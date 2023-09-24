@@ -63,9 +63,11 @@ const HomePage: React.FC = () => {
     websocket.onmessage = (event) => {
       const data = JSON.parse(event.data);
       console.log(data);
-
+    
       if (data.type === 'accepted') {
+        // Código para manejar la aceptación
       } else if (data.type === 'question') {
+        setLobbyData(null); // Asegurarse de restablecer lobbyData a null
         setIsQuestionReceived(true);
         setQuestionData(data);
         setChatMessages([]); // Limpiar mensajes de chat al recibir una nueva pregunta

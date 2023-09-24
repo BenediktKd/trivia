@@ -5,7 +5,7 @@ import './globals.css';
 
 const HomePage: React.FC = () => {
   const [ws, setWs] = useState<WebSocket | null>(null);
-  const [redirectedToQuestion, setRedirectedToQuestion] = useState(false); // Nuevo estado
+
   // Función para manejar el evento de unirse a la trivia
   const handleJoinTrivia = () => {
     const studentNumber = (document.getElementById('studentNumber') as HTMLInputElement).value;
@@ -29,13 +29,11 @@ const HomePage: React.FC = () => {
       const data = JSON.parse(event.data);
       console.log(data);
 
-      if (data.type === 'accepted' && !redirectedToQuestion) { // Verificar si no se ha redirigido a la pregunta
-        // Redirigir al lobby si se acepta la conexión
-        window.location.href = '/lobby';
+      if (data.type === 'accepted') {
+        // Si se acepta la conexión, simplemente se muestra un mensaje en la consola
+        console.log("Conexión aceptada. Esperando eventos...");
       } else if (data.type === 'question') {
-        // Si recibes una pregunta inmediatamente después de unirte, significa que te has unido a una partida en curso
-        alert("Te has unido a una partida en curso. Comenzarás con 0 puntos.");
-        setRedirectedToQuestion(true); // Establecer que el usuario ha sido redirigido a la página de pregunta
+        // Si recibes una pregunta, redirige a la página de pregunta
         window.location.href = '/question';
       }
       // Puedes agregar más lógica para manejar otros eventos aquí
@@ -75,3 +73,4 @@ const HomePage: React.FC = () => {
 }
 
 export default HomePage;
+

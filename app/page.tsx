@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './globals.css';
 
 const HomePage: React.FC = () => {
@@ -11,6 +11,11 @@ const HomePage: React.FC = () => {
   const [chatMessages, setChatMessages] = useState<Array<{ message: string, username: string, timestamp: string }>>([]);
 
   const buttonColors = ['bg-red-600', 'bg-green-600', 'bg-blue-600', 'bg-yellow-600'];
+
+  useEffect(() => {
+    // Cada vez que questionData cambie, limpiar chatMessages
+    setChatMessages([]);
+  }, [questionData]); // Dependencia en questionData
 
   const handleAnswer = (selectedOption: string) => {
     if (ws) {
@@ -29,7 +34,7 @@ const HomePage: React.FC = () => {
 
   const handleChatMessage = (message: string, username: string) => {
     const timestamp = new Date().toLocaleTimeString();
-    setChatMessages(prevMessages => [...prevMessages, { message, username, timestamp }]);
+    setChatMessages([...chatMessages, { message, username, timestamp }]);
   };
 
   const handleJoinTrivia = () => {

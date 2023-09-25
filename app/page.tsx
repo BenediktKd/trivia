@@ -16,6 +16,8 @@ const HomePage: React.FC = () => {
   const [triviaName, setTriviaName] = useState<string | null>(null);
   const [currentStreak, setCurrentStreak] = useState<{username: string, streak: number}>({username: '', streak: 0});
   const [answerResult, setAnswerResult] = useState<{correct?: boolean}>({});
+  const [questionId, setQuestionId] = useState<number | null>(null);
+
 
 
   const buttonColors = ['bg-red-600', 'bg-green-600', 'bg-blue-600', 'bg-yellow-600'];
@@ -46,7 +48,14 @@ const HomePage: React.FC = () => {
   };
 
   const handleTextAnswer = () => {
-    handleAnswer(textAnswer);
+    if (ws) { // Aseguramos que ws está definido
+      ws.send(JSON.stringify({
+        type: 'answer',
+        question_id: questionData.question_id, // usando questionData.question_id aquí
+        value: textAnswer // enviando el texto de la respuesta como 'value'
+      }));
+      setTextAnswer(''); // Limpiar la respuesta de texto después de enviarla
+    }
   };
 
   const handleChatMessage = (message: string, username: string) => {
@@ -76,6 +85,7 @@ const HomePage: React.FC = () => {
       if (data.type === 'accepted') {
         // Código para manejar la aceptación
       } else if (data.type === 'question') {
+        setQuestionId(data.question_id);  // Agrega esta línea
         setTriviaName(data.trivia_id); // Set the trivia name here
         setLobbyData(null); 
         setIsQuestionReceived(true);

@@ -14,6 +14,18 @@
 [] Agregar las restricciones que piden
 
 
+streak
+: 
+4
+trivia_id
+: 
+"P1PhNGmqUPNUpw"
+type
+: 
+"streak"
+username
+: 
+"LA"
 
 
 

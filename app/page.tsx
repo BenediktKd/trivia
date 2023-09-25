@@ -33,12 +33,12 @@ const HomePage: React.FC = () => {
   }, [highScores]);
 
   const handleAnswer = (selectedOption: string) => {
-    if (ws) {
+    if (ws && questionData && questionData.question) {
       ws.send(JSON.stringify({
         type: 'answer',
         value: selectedOption,
-        question_id: questionData.question_id,
-        trivia_id: questionData.trivia_id
+        question_id: questionData.question.id, // Accediendo a questionData.question.id
+        trivia_id: triviaName // Usando triviaName que ya se ha establecido
       }));
     }
   };
@@ -78,7 +78,7 @@ const HomePage: React.FC = () => {
         setTriviaName(data.trivia_id);
         setLobbyData(null); // Asegurarse de restablecer lobbyData a null
         setIsQuestionReceived(true);
-        setQuestionData(data);
+        setQuestionData(data.question); // Estableciendo questionData a data.question
         setChatMessages([]); // Limpiar mensajes de chat al recibir una nueva pregunta
       } else if (data.type === 'chat') {
         handleChatMessage(data.message, data.username);

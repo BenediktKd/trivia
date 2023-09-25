@@ -13,6 +13,7 @@ const HomePage: React.FC = () => {
   const [scores, setScores] = useState<{ [username: string]: number }>({});
   const [lobbyData, setLobbyData] = useState<any | null>(null);
   const [highScores, setHighScores] = useState<any | null>(null);
+  const [triviaName, setTriviaName] = useState<string | null>(null);
 
   const buttonColors = ['bg-red-600', 'bg-green-600', 'bg-blue-600', 'bg-yellow-600'];
 
@@ -36,7 +37,7 @@ const HomePage: React.FC = () => {
         type: 'answer',
         answer: selectedOption,
         question_id: questionData.question_id,
-        trivia_id: questionData.trivia_id
+        trivia_id: triviaName // using triviaName here
       }));
     }
   };
@@ -72,10 +73,11 @@ const HomePage: React.FC = () => {
       if (data.type === 'accepted') {
         // Código para manejar la aceptación
       } else if (data.type === 'question') {
-        setLobbyData(null); // Asegurarse de restablecer lobbyData a null
+        setTriviaName(data.trivia_id); // Set the trivia name here
+        setLobbyData(null); 
         setIsQuestionReceived(true);
         setQuestionData(data);
-        setChatMessages([]); // Limpiar mensajes de chat al recibir una nueva pregunta
+        setChatMessages([]);
       } else if (data.type === 'chat') {
         handleChatMessage(data.message, data.username);
       } else if (data.type === 'timer') {
@@ -125,6 +127,7 @@ const HomePage: React.FC = () => {
           </div>
         ) : isQuestionReceived && questionData ? (
           <div>
+            <h2>Trivia: {triviaName}</h2> {/* Displaying the trivia name here */}
             <h3>{questionData.question_title}</h3>
             {questionData.question_type === 'button' && (
               <div>

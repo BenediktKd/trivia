@@ -37,15 +37,19 @@ const HomePage: React.FC = () => {
   }, [highScores]);
 
   const handleAnswer = (selectedOption: string) => {
+    console.log("Selected Option:", selectedOption); // mostrar el valor
+    console.log("Type of Selected Option:", typeof selectedOption); // mostrar el tipo de dato
+    
     if (ws) {
       ws.send(JSON.stringify({
         type: 'answer',
         answer: selectedOption,
         question_id: questionData.question_id,
-        trivia_id: triviaName // using triviaName here
+        trivia_id: triviaName // usando triviaName aquí
       }));
     }
   };
+  
 
   const handleTextAnswer = () => {
     if (ws) { // Aseguramos que ws está definido

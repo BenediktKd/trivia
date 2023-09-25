@@ -1,3 +1,23 @@
+## Preguntas por hacer
+
+¿Como hago que el nombre por default sea el mio?
+
+## Cosas por implementar
+
+[] Resultado final
+[] Agregar los datos que se solicitan en las preguntas
+- Numero de pregunta
+- Tiempo que queda 
+- Nombre de la trivia
+[] Manejo de respuesta
+[] Agregar jugador en racha 
+[] Agregar las restricciones que piden
+
+
+
+
+
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started

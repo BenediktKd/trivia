@@ -12,6 +12,7 @@ const HomePage: React.FC = () => {
   const [secondsRemaining, setSecondsRemaining] = useState<number | null>(null);
   const [scores, setScores] = useState<{ [username: string]: number }>({});
   const [lobbyData, setLobbyData] = useState<any | null>(null);
+  const [highScores, setHighScores] = useState<any | null>(null);
 
   const buttonColors = ['bg-red-600', 'bg-green-600', 'bg-blue-600', 'bg-yellow-600'];
 
@@ -80,6 +81,9 @@ const HomePage: React.FC = () => {
       } else if (data.type === 'lobby') {
         setLobbyData(data);
       }
+      else if (data.type === 'highscore') {
+        setHighScores(data.winners);
+      }
     };
 
     setWs(websocket);
@@ -90,7 +94,20 @@ const HomePage: React.FC = () => {
   return (
     <div className="flex flex-row justify-between min-h-screen p-4">
       <div className="flex flex-col items-start w-2/3">
-        {lobbyData ? (
+        {highScores ? (
+          <div className="highscore-info border p-4 rounded-md">
+            <h3>High Scores for Trivia ID: {highScores.trivia_id}</h3>
+            <ul>
+              {highScores.winners.map((winner: any, index: number) => (
+                <li key={index}>
+                  <p>{index + 1}. Username: {winner.username}</p>
+                  <p>Score: {winner.score}</p>
+                  <p>Streak: {winner.streak}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : lobbyData ? (
           <div className="lobby-info border p-4 rounded-md">
             <h3>ID de Trivia: {lobbyData.trivia_id}</h3>
             <p>{lobbyData.message}</p>

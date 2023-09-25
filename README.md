@@ -4,7 +4,7 @@
 
 ## Cosas por implementar
 
-[] Resultado final
+[Listo] Resultado final
 [] Agregar los datos que se solicitan en las preguntas
 - Numero de pregunta
 - Tiempo que queda 

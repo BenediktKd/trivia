@@ -13,6 +13,8 @@ const HomePage: React.FC = () => {
   const [scores, setScores] = useState<{ [username: string]: number }>({});
   const [lobbyData, setLobbyData] = useState<any | null>(null);
   const [highScores, setHighScores] = useState<any | null>(null);
+  const [questionNumber, setQuestionNumber] = useState<number | null>(null);
+  const [triviaName, setTriviaName] = useState<string | null>(null);
 
   const buttonColors = ['bg-red-600', 'bg-green-600', 'bg-blue-600', 'bg-yellow-600'];
 
@@ -34,7 +36,7 @@ const HomePage: React.FC = () => {
     if (ws) {
       ws.send(JSON.stringify({
         type: 'answer',
-        answer: selectedOption,
+        value: selectedOption,
         question_id: questionData.question_id,
         trivia_id: questionData.trivia_id
       }));
@@ -72,6 +74,8 @@ const HomePage: React.FC = () => {
       if (data.type === 'accepted') {
         // Código para manejar la aceptación
       } else if (data.type === 'question') {
+        setQuestionNumber(data.question.id); // Asumiendo que el número de la pregunta viene en data.question.id
+        setTriviaName(data.trivia_id);
         setLobbyData(null); // Asegurarse de restablecer lobbyData a null
         setIsQuestionReceived(true);
         setQuestionData(data);
@@ -125,7 +129,9 @@ const HomePage: React.FC = () => {
           </div>
         ) : isQuestionReceived && questionData ? (
           <div>
-            <h3>{questionData.question_title}</h3>
+                <h3>Trivia: {triviaName}</h3> {/* Muestra el nombre de la trivia */}
+                <h4>Pregunta Número: {questionNumber}</h4> {/* Muestra el número de la pregunta */}
+                <h3>{questionData.question_title}</h3>
             {questionData.question_type === 'button' && (
               <div>
                 {Object.entries(questionData.question_options).map(([key, value], index) => (

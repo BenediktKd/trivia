@@ -15,6 +15,7 @@ const HomePage: React.FC = () => {
   const [highScores, setHighScores] = useState<any | null>(null);
   const [triviaName, setTriviaName] = useState<string | null>(null);
   const [currentStreak, setCurrentStreak] = useState<{username: string, streak: number}>({username: '', streak: 0});
+  const [answerResult, setAnswerResult] = useState<{correct?: boolean}>({});
 
 
   const buttonColors = ['bg-red-600', 'bg-green-600', 'bg-blue-600', 'bg-yellow-600'];
@@ -55,7 +56,7 @@ const HomePage: React.FC = () => {
 
   const handleJoinTrivia = () => {
     const studentNumber = (document.getElementById('studentNumber') as HTMLInputElement).value;
-    const username = (document.getElementById('username') as HTMLInputElement).value || 'DefaultUsername';
+    const username = (document.getElementById('username') as HTMLInputElement).value || 'Vladimir Putin';
 
     const websocket = new WebSocket('wss://trivia.tallerdeintegracion.cl/connect');
 
@@ -94,6 +95,9 @@ const HomePage: React.FC = () => {
       }
         else if (data.type === 'streak') {
         setCurrentStreak({username: data.username, streak: data.streak});
+      }
+        else if (data.type === 'result') {
+        setAnswerResult({ correct: data.correct });
       }
     };
 
@@ -139,6 +143,11 @@ const HomePage: React.FC = () => {
             <h3>{questionData.question_title}</h3>
             {secondsRemaining !== null && (
               <p className="text-lg mb-8">Tiempo restante: {secondsRemaining} segundos</p>
+            )}
+            {answerResult.correct !== undefined && (
+              <div className={`text-4xl ${answerResult.correct ? 'text-green-600' : 'text-red-600'}`}>
+                {answerResult.correct ? '¡Correcto!' : '¡Te equivocaste!'}
+              </div>
             )}
             {questionData.question_type === 'button' && (
               <div>

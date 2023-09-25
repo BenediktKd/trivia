@@ -36,8 +36,8 @@ const HomePage: React.FC = () => {
       ws.send(JSON.stringify({
         type: 'answer',
         answer: selectedOption,
-        question_id: questionData.question.id,
-        trivia_id: triviaName
+        question_id: questionData.question_id,
+        trivia_id: triviaName // using triviaName here
       }));
     }
   };
@@ -73,10 +73,10 @@ const HomePage: React.FC = () => {
       if (data.type === 'accepted') {
         // Código para manejar la aceptación
       } else if (data.type === 'question') {
-        setTriviaName(data.trivia_id);
-        setLobbyData(null);
+        setTriviaName(data.trivia_id); // Set the trivia name here
+        setLobbyData(null); 
         setIsQuestionReceived(true);
-        setQuestionData(data.question);
+        setQuestionData(data);
         setChatMessages([]);
       } else if (data.type === 'chat') {
         handleChatMessage(data.message, data.username);
@@ -129,7 +129,6 @@ const HomePage: React.FC = () => {
           <div>
             <h2>Trivia: {triviaName}</h2> {/* Displaying the trivia name here */}
             <h3>{questionData.question_title}</h3>
-            <p>Tiempo restante: {secondsRemaining} segundos</p>
             {questionData.question_type === 'button' && (
               <div>
                 {Object.entries(questionData.question_options).map(([key, value], index) => (
@@ -235,6 +234,8 @@ const HomePage: React.FC = () => {
 }
 
 export default HomePage;
+
+
 
 
 

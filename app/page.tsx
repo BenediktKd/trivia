@@ -43,7 +43,7 @@ const HomePage: React.FC = () => {
     if (ws) {
       ws.send(JSON.stringify({
         type: 'answer',
-        answer: selectedOption,
+        answer: parseInt(selectedOption),
         question_id: questionData.question_id,
         trivia_id: triviaName // usando triviaName aquí
       }));

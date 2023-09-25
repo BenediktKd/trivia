@@ -100,6 +100,9 @@ const HomePage: React.FC = () => {
   return (
     <div className="flex flex-row justify-between min-h-screen p-4">
       <div className="flex flex-col items-start w-2/3">
+      <h2 className="text-3xl font-bold mb-4">¡Bienvenido a Mystical Trivia Quest!</h2>
+      <p className="text-lg mb-8">Únete a la aventura y demuestra tus conocimientos.</p>
+
         {highScores && highScores.winners ? (
           <div className="highscore-info border p-4 rounded-md">
             <h3>High Scores for Trivia ID: {highScores.trivia_id}</h3>
@@ -129,6 +132,9 @@ const HomePage: React.FC = () => {
           <div>
             <h2>Trivia: {triviaName}</h2> {/* Displaying the trivia name here */}
             <h3>{questionData.question_title}</h3>
+            {secondsRemaining !== null && (
+              <p className="text-lg mb-8">Tiempo restante: {secondsRemaining} segundos</p>
+            )}
             {questionData.question_type === 'button' && (
               <div>
                 {Object.entries(questionData.question_options).map(([key, value], index) => (

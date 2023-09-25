@@ -14,6 +14,8 @@ const HomePage: React.FC = () => {
   const [lobbyData, setLobbyData] = useState<any | null>(null);
   const [highScores, setHighScores] = useState<any | null>(null);
   const [triviaName, setTriviaName] = useState<string | null>(null);
+  const [currentStreak, setCurrentStreak] = useState<{username: string, streak: number}>({username: '', streak: 0});
+
 
   const buttonColors = ['bg-red-600', 'bg-green-600', 'bg-blue-600', 'bg-yellow-600'];
 
@@ -89,6 +91,9 @@ const HomePage: React.FC = () => {
       } else if (data.type === 'highscore') {
         console.log(data);
         setHighScores(data);
+      }
+        else if (data.type === 'streak') {
+        setCurrentStreak({username: data.username, streak: data.streak});
       }
     };
 
@@ -217,6 +222,11 @@ const HomePage: React.FC = () => {
   
       {/* Tabla de clasificación */}
       <div className="ranking-table mt-4 w-1/3">
+      <div className="mb-4">
+        <p className="text-lg font-bold">
+          La racha actual es de {currentStreak.streak} de {currentStreak.username}.
+        </p>
+      </div>
         <h3 className="text-lg font-bold">Ranking</h3>
         <table className="border-collapse border border-gray-500 w-full">
           <thead>

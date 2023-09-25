@@ -38,16 +38,17 @@ const HomePage: React.FC = () => {
 
   const handleAnswer = (selectedOption: string) => {
     console.log("Selected Option:", selectedOption); // mostrar el valor
-    console.log("Type of Selected Option:", typeof selectedOption); // mostrar el tipo de dato
+    
     
     if (ws) {
       ws.send(JSON.stringify({
         type: 'answer',
-        answer: parseInt(selectedOption),
         question_id: questionData.question_id,
+        value: selectedOption,
         trivia_id: triviaName // usando triviaName aquí
       }));
     }
+    console.log("Type of Selected Option:", typeof selectedOption); // mostrar el tipo de dato
   };
   
 

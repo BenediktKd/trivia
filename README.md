@@ -76,6 +76,6 @@
 
 ## Referencias
 
-Este documento ha sido elaborado con la ayuda de ChatGPT de OpenAI[^1].
+Este codigo ha sido elaborado con la ayuda de ChatGPT de OpenAI[^1].
 
 [^1]: "ChatGPT - OpenAI." https://www.openai.com/research/publications/chatgpt.

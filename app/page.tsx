@@ -156,7 +156,7 @@ const HomePage: React.FC = () => {
         ) : isQuestionReceived && questionData ? (
           <div>
             <h2>Trivia: {triviaName}</h2> {/* Displaying the trivia name here */}
-            <h3>Pregunta {questionId}: {questionData.question_title}</h3> 
+            <h3>Pregunta {questionId}:</h3> 
             <h3>{questionData.question_title}</h3>
             {secondsRemaining !== null && (
               <p className="text-lg mb-8">Tiempo restante: {secondsRemaining} segundos</p>

@@ -70,7 +70,7 @@ const HomePage: React.FC = () => {
 
   const handleJoinTrivia = () => {
     const studentNumber = (document.getElementById('studentNumber') as HTMLInputElement).value;
-    const username = (document.getElementById('username') as HTMLInputElement).value || 'Vladimir Putin';
+    const username = (document.getElementById('username') as HTMLInputElement).value || '';
 
     const websocket = new WebSocket('wss://trivia.tallerdeintegracion.cl/connect');
 
@@ -90,8 +90,9 @@ const HomePage: React.FC = () => {
       if (data.type === 'accepted') {
         // Código para manejar la aceptación
       } else if (data.type === 'question') {
-        setQuestionId(data.question_id);  // Agrega esta línea
-        setTriviaName(data.trivia_id); // Set the trivia name here
+        setAnswerResult({});
+        setQuestionId(data.question_id); 
+        setTriviaName(data.trivia_id); 
         setLobbyData(null); 
         setIsQuestionReceived(true);
         setQuestionData(data);
@@ -248,7 +249,7 @@ const HomePage: React.FC = () => {
       <div className="ranking-table mt-4 w-1/3">
       <div className="mb-4">
         <p className="text-lg font-bold">
-          La racha actual es de {currentStreak.streak} de {currentStreak.username}.
+          La mejor racha hasta el momento es de {currentStreak.streak} de {currentStreak.username}.
         </p>
       </div>
         <h3 className="text-lg font-bold">Ranking</h3>
